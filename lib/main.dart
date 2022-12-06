@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Attendance App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.orange,
       ),
       home: AttendancePage(),
     );
@@ -24,21 +24,11 @@ class AttendancePage extends StatefulWidget {
 
 class _AttendancePageState extends State<AttendancePage> {
   // List of students in the class
-  List<String> students = [    "Alice",    "Bob",    "Charlie",    "David",    "Eve",    "Frank",    "Gina",    "Harry",    "Ivy",    "Jack",  ];
+  List<String> students = [];
 
   // Map of student names to their attendance status
   // true: present, false: absent
   Map<String, bool> attendance = {};
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Set all students to absent by default
-    for (var student in students) {
-      attendance[student] = false;
-    }
-  }
 
   void addStudent() {
     showDialog(
@@ -59,6 +49,13 @@ class _AttendancePageState extends State<AttendancePage> {
         );
       },
     );
+  }
+
+  void removeStudent(String name) {
+    setState(() {
+      students.remove(name);
+      attendance.remove(name);
+    });
   }
 
   @override
@@ -85,10 +82,13 @@ class _AttendancePageState extends State<AttendancePage> {
                 attendance[student] = value!;
               });
             },
+            secondary: IconButton(
+              icon: Icon(Icons.remove),
+              onPressed: () => removeStudent(student),
+            ),
           );
         },
       ),
     );
   }
 }
-
