@@ -30,6 +30,10 @@ class _AttendancePageState extends State<AttendancePage> {
   // true: present, false: absent
   Map<String, bool> attendance = {};
 
+  // Date to show attendance for
+  DateTime date = DateTime.now();
+
+
   void addStudent() {
     showDialog(
       context: context,
@@ -67,6 +71,23 @@ class _AttendancePageState extends State<AttendancePage> {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: addStudent,
+          ),
+          IconButton(
+            icon: Icon(Icons.date_range),
+            onPressed: () {
+              showDatePicker(
+                context: context,
+                initialDate: date,
+                firstDate: DateTime(1900),
+                lastDate: DateTime(2100),
+              ).then((value) {
+                if (value != null) {
+                  setState(() {
+                    date = value;
+                  });
+                }
+              });
+            },
           ),
         ],
       ),
