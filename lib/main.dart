@@ -24,7 +24,7 @@ class AttendancePage extends StatefulWidget {
 
 class _AttendancePageState extends State<AttendancePage> {
   // List of students in the class
-  final List<String> students = [    "Alice",    "Bob",    "Charlie",    "David",    "Eve",    "Frank",    "Gina",    "Harry",    "Ivy",    "Jack",  ];
+  List<String> students = [    "Alice",    "Bob",    "Charlie",    "David",    "Eve",    "Frank",    "Gina",    "Harry",    "Ivy",    "Jack",  ];
 
   // Map of student names to their attendance status
   // true: present, false: absent
@@ -40,11 +40,38 @@ class _AttendancePageState extends State<AttendancePage> {
     }
   }
 
+  void addStudent() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Add Student"),
+          content: TextField(
+            onSubmitted: (name) {
+              // Add the student to the list
+              setState(() {
+                students.add(name);
+                attendance[name] = false;
+              });
+              Navigator.pop(context);
+            },
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Attendance"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: addStudent,
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: students.length,
@@ -64,3 +91,4 @@ class _AttendancePageState extends State<AttendancePage> {
     );
   }
 }
+
