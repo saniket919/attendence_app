@@ -12,7 +12,45 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      home: AttendancePage(),
+      home: LoadingScreen(),
+    );
+  }
+}
+
+class LoadingScreen extends StatefulWidget {
+  @override
+  _LoadingScreenState createState() => _LoadingScreenState();
+}
+
+class _LoadingScreenState extends State<LoadingScreen> {
+  // Future that completes after 2 seconds
+  late Future<void> _loadingFuture;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Start the 2 second timer when the widget is initialized
+    _loadingFuture = Future.delayed(Duration(seconds: 2));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _loadingFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          // If the Future is complete, show the main app
+          return AttendancePage();
+        } else {
+          // Otherwise, show a loading indicator
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
+      },
     );
   }
 }
@@ -24,7 +62,8 @@ class AttendancePage extends StatefulWidget {
 
 class _AttendancePageState extends State<AttendancePage> {
   // List of students in the class
-  List<String> students = [];
+  List<String> students = [
+  ];
 
   // Map of student names to their attendance status
   // true: present, false: absent
