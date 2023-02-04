@@ -1,154 +1,64 @@
+// Importing important packages require to connect
+// Flutter and Dart
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
+// Main Function
+Future <void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+// Giving command to runApp() to run the app.
+
+/* The purpose of the runApp() function is to attach
+the given widget to the screen. */
+  runApp(const MyApp());
 }
 
+// Widget is used to create UI in flutter framework.
+
+/* StatelessWidget is a widget, which does not maintain
+any state of the widget. */
+
+/* MyApp extends StatelessWidget and overrides its
+build method. */
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+// This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Attendance App',
+      // title of the application
+      title: 'Hello World Demo Application',
+      // theme of the widget
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        primarySwatch: Colors.lightGreen,
       ),
-      home: LoadingScreen(),
+      // Inner UI of the application
+      home: const MyHomePage(title: 'Home page'),
     );
   }
 }
 
-class LoadingScreen extends StatefulWidget {
-  @override
-  _LoadingScreenState createState() => _LoadingScreenState();
-}
-
-class _LoadingScreenState extends State<LoadingScreen> {
-  // Future that completes after 2 seconds
-  late Future<void> _loadingFuture;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // Start the 2 second timer when the widget is initialized
-    _loadingFuture = Future.delayed(Duration(seconds: 2));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _loadingFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          // If the Future is complete, show the main app
-          return AttendancePage();
-        } else {
-          // Otherwise, show a loading indicator
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-      },
-    );
-  }
-}
-
-class AttendancePage extends StatefulWidget {
-  @override
-  _AttendancePageState createState() => _AttendancePageState();
-}
-
-class _AttendancePageState extends State<AttendancePage> {
-  // List of students in the class
-  List<String> students = [
-  ];
-
-  // Map of student names to their attendance status
-  // true: present, false: absent
-  Map<String, bool> attendance = {};
-
-  // Date to show attendance for
-  DateTime date = DateTime.now();
-
-
-  void addStudent() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Add Student"),
-          content: TextField(
-            onSubmitted: (name) {
-              // Add the student to the list
-              setState(() {
-                students.add(name);
-                attendance[name] = false;
-              });
-              Navigator.pop(context);
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  void removeStudent(String name) {
-    setState(() {
-      students.remove(name);
-      attendance.remove(name);
-    });
-  }
+/* This class is similar to MyApp instead it
+returns Scaffold Widget */
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Attendance"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: addStudent,
-          ),
-          IconButton(
-            icon: Icon(Icons.date_range),
-            onPressed: () {
-              showDatePicker(
-                context: context,
-                initialDate: date,
-                firstDate: DateTime(1900),
-                lastDate: DateTime(2100),
-              ).then((value) {
-                if (value != null) {
-                  setState(() {
-                    date = value;
-                  });
-                }
-              });
-            },
-          ),
-        ],
+        title: Text(title),
       ),
-      body: ListView.builder(
-        itemCount: students.length,
-        itemBuilder: (context, index) {
-          var student = students[index];
-          return CheckboxListTile(
-            value: attendance[student],
-            title: Text(student),
-            onChanged: (value) {
-              setState(() {
-                attendance[student] = value!;
-              });
-            },
-            secondary: IconButton(
-              icon: Icon(Icons.remove),
-              onPressed: () => removeStudent(student),
-            ),
-          );
-        },
-      ),
+      // Sets the content to the
+      // center of the application page
+      body: const Center(
+        // Sets the content of the Application
+          child: Text(
+            'Welcome Durgansh',
+          )),
     );
   }
 }
